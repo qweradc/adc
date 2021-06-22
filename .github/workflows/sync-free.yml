@@ -1,0 +1,25 @@
+# File: .github/workflows/repo-sync.yml
+name: A🔄自动同步🔄A
+on:
+  schedule:
+    - cron: '0 */1 * * *'
+  workflow_dispatch:
+  watch:
+    types: started
+  repository_dispatch:
+    types: repo-sync
+jobs:
+  repo-sync:
+    env:
+      dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: sync github -> gitee
+        uses: Yikun/hub-mirror-action@master
+        with:
+          src: github/JDHelloWorld
+          dst: gitee/tm306
+          static_list: "JDNEW"
+          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+          dst_token: ${{ secrets.GITEE_TOKEN }}
